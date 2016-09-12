@@ -17,7 +17,7 @@ class Post(models.Model):
     text = models.TextField()
     title = models.CharField(max_length=200)
     linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES, default='text', max_length=100)
+    language = models.CharField(choices=LANGUAGE_CHOICES, default='text only', max_length=100)
     style = models.CharField(choices=STYLE_CHOICES, default='friendly', max_length=100)
     highlighted = models.TextField()
 
@@ -41,12 +41,12 @@ class Post(models.Model):
         options = self.title and {'title': self.title}
         formatter = HtmlFormatter(style=self.style, linenos=linenos,
                                   full=True, **options)
-        self.highlighted = highlight(self.code, lexer, formatter)
+        self.highlighted = highlight(self.text, lexer, formatter)
         super(Post, self).save(*args, **kwargs)
 
 
 class Comment(models.Model):
-    post = models.ForeignKey('blog.Post', related_name='comments')
+    post = models.ForeignKey(Post, related_name='comments')
     owner = models.ForeignKey('auth.User', related_name='comments')
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
