@@ -2,7 +2,7 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer, UserSerializer
 from django.contrib.auth.models import User
 from rest_framework import permissions
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, YouShallNotPutAndDelete
 from rest_framework.response import Response
 from rest_framework import renderers
 from rest_framework import viewsets
@@ -39,6 +39,6 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (YouShallNotPutAndDelete,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
